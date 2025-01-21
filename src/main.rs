@@ -3,7 +3,7 @@
 //! An example displaying an animated Pacman.
 
 use embedded_graphics::{
-    pixelcolor::Rgb565,
+    pixelcolor::Rgb666,
     prelude::*,
     primitives::{Circle, PrimitiveStyleBuilder, Sector},
 };
@@ -17,18 +17,18 @@ const STEPS: i32 = 10;
 
 fn main() -> Result<(), std::convert::Infallible> {
     // Create a new simulator display with 65x65 pixels.
-    let mut display: SimulatorDisplay<Rgb565> = SimulatorDisplay::new(Size::new(65, 65));
+    let mut display: SimulatorDisplay<Rgb666> = SimulatorDisplay::new(Size::new(65, 65));
 
     // Create styles used by the drawing operations.
     let sector_style = PrimitiveStyleBuilder::new()
-        .stroke_color(Rgb565::BLACK)
+        .stroke_color(Rgb666::BLACK)
         .stroke_width(2)
-        .fill_color(Rgb565::YELLOW)
+        .fill_color(Rgb666::YELLOW)
         .build();
     let eye_style = PrimitiveStyleBuilder::new()
-        .stroke_color(Rgb565::BLACK)
+        .stroke_color(Rgb666::BLACK)
         .stroke_width(1)
-        .fill_color(Rgb565::BLACK)
+        .fill_color(Rgb666::BLACK)
         .build();
 
     let output_settings = OutputSettingsBuilder::new().scale(4).build();
@@ -38,7 +38,7 @@ fn main() -> Result<(), std::convert::Infallible> {
     let mut progress: i32 = 0;
 
     'running: loop {
-        display.clear(Rgb565::WHITE)?;
+        display.clear(Rgb666::WHITE)?;
 
         let p = (progress - STEPS).abs();
 
@@ -67,4 +67,3 @@ fn main() -> Result<(), std::convert::Infallible> {
         progress = (progress + 1) % (2 * STEPS + 1);
     }
 }
-
