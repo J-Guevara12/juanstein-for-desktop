@@ -2,68 +2,30 @@
 //!
 //! An example displaying an animated Pacman.
 
-use embedded_graphics::{
-    pixelcolor::Rgb666,
-    prelude::*,
-    primitives::{Circle, PrimitiveStyleBuilder, Sector},
-};
+use embedded_graphics::{pixelcolor::Rgb666, prelude::*};
 use embedded_graphics_simulator::{
     OutputSettingsBuilder, SimulatorDisplay, SimulatorEvent, Window,
 };
 use std::{thread, time::Duration};
 
-// the number of steps of the animation
-const STEPS: i32 = 10;
+const WIDTH: u32 = 320;
+const HEIGHT: u32 = 240;
 
 fn main() -> Result<(), std::convert::Infallible> {
     // Create a new simulator display with 65x65 pixels.
-    let mut display: SimulatorDisplay<Rgb666> = SimulatorDisplay::new(Size::new(65, 65));
+    let mut display: SimulatorDisplay<Rgb666> = SimulatorDisplay::new(Size::new(WIDTH, HEIGHT));
 
-    // Create styles used by the drawing operations.
-    let sector_style = PrimitiveStyleBuilder::new()
-        .stroke_color(Rgb666::BLACK)
-        .stroke_width(2)
-        .fill_color(Rgb666::YELLOW)
-        .build();
-    let eye_style = PrimitiveStyleBuilder::new()
-        .stroke_color(Rgb666::BLACK)
-        .stroke_width(1)
-        .fill_color(Rgb666::BLACK)
-        .build();
-
-    let output_settings = OutputSettingsBuilder::new().scale(4).build();
+    let output_settings = OutputSettingsBuilder::new().scale(3).build();
     let mut window = Window::new("Pacman", &output_settings);
 
-    // The current progress of the animation
-    let mut progress: i32 = 0;
-
-    'running: loop {
-        display.clear(Rgb666::WHITE)?;
-
-        let p = (progress - STEPS).abs();
-
-        // Draw a Sector as the main Pacman feature.
-        Sector::new(
-            Point::new(2, 2),
-            61,
-            Angle::from_degrees((p * 30 / STEPS) as f32),
-            Angle::from_degrees((360 - 2 * p * 30 / STEPS) as f32),
-        )
-        .into_styled(sector_style)
-        .draw(&mut display)?;
-
-        // Draw a Circle as the eye.
-        Circle::new(Point::new(36, 16), 5)
-            .into_styled(eye_style)
-            .draw(&mut display)?;
+    loop {
+        display.clear(Rgb666::BLACK)?;
 
         window.update(&display);
 
         if window.events().any(|e| e == SimulatorEvent::Quit) {
-            break 'running Ok(());
+            break Ok(());
         }
         thread::sleep(Duration::from_millis(50));
-
-        progress = (progress + 1) % (2 * STEPS + 1);
     }
 }
