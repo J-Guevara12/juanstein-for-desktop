@@ -4,9 +4,9 @@ use embedded_graphics::{
     primitives::{PrimitiveStyleBuilder, Rectangle},
 };
 
-use crate::WIDTH;
+use crate::{HEIGHT, WIDTH};
 
-const MAP: [[u32; 8]; 8] = [
+const MAP: [[u8; 8]; 8] = [
     [1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 1, 0, 0, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 1],
@@ -16,6 +16,7 @@ const MAP: [[u32; 8]; 8] = [
     [1, 0, 1, 0, 0, 1, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1],
 ];
+
 const BACKGROUND_COLOR: Rgb666 = Rgb666::WHITE;
 const LINE_COLOR: Rgb666 = Rgb666::BLACK;
 
@@ -23,7 +24,8 @@ pub fn draw_map<D>(display: &mut D) -> Result<(), D::Error>
 where
     D: DrawTarget<Color = Rgb666>,
 {
-    let grid_size: i32 = WIDTH as i32 / MAP.len() as i32;
+    let grid_size: i32 =
+        std::cmp::min(WIDTH as usize / MAP.len(), HEIGHT as usize / MAP[0].len()) as i32;
     let space_style = PrimitiveStyleBuilder::new()
         .stroke_color(LINE_COLOR)
         .stroke_width(1)
